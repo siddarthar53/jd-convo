@@ -2,41 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* HR Platform Design System - Professional & Modern */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Corporate Color Palette */
+    --background: 218 25% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Professional Blue */
+    --primary: 214 84% 56%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 214 84% 52%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Soft Blue Gray */
+    --secondary: 215 16% 94%;
+    --secondary-foreground: 215 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted Tones */
+    --muted: 215 16% 96%;
+    --muted-foreground: 215 16% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Success Green */
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 15%;
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Interface Elements */
+    --border: 215 16% 90%;
+    --input: 215 16% 94%;
+    --ring: 214 84% 56%;
 
-    --radius: 0.5rem;
+    /* Chat Interface */
+    --chat-bg: 218 25% 98%;
+    --user-bubble: 214 84% 56%;
+    --system-bubble: 0 0% 100%;
+    --mention-bg: 160 84% 95%;
+    --mention-border: 160 84% 39%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(214 84% 56%) 0%, hsl(214 84% 48%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(215 16% 98%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(214 84% 56%) 0%, hsl(190 84% 56%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(215 25% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(215 25% 15% / 0.1), 0 2px 4px -1px hsl(215 25% 15% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(215 25% 15% / 0.1), 0 4px 6px -2px hsl(215 25% 15% / 0.05);
+    --shadow-glow: 0 0 30px hsl(214 84% 56% / 0.3);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +129,120 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Chat Interface Components */
+  .chat-bubble {
+    @apply rounded-2xl px-4 py-3 max-w-xs sm:max-w-md break-words;
+  }
+
+  .chat-bubble-user {
+    @apply bg-primary text-primary-foreground ml-auto;
+    background: var(--gradient-primary);
+  }
+
+  .chat-bubble-system {
+    @apply bg-card text-card-foreground border shadow-sm;
+    background: var(--gradient-card);
+  }
+
+  .mention-badge {
+    @apply inline-flex items-center px-2 py-1 text-xs font-medium rounded-md;
+    background: hsl(var(--mention-bg));
+    border: 1px solid hsl(var(--mention-border));
+    color: hsl(var(--accent));
+  }
+
+  /* Card Components */
+  .card-elevated {
+    @apply bg-card border rounded-xl shadow-md hover:shadow-lg transition-all duration-300;
+    background: var(--gradient-card);
+  }
+
+  .card-interactive {
+    @apply cursor-pointer transform hover:scale-[1.02] transition-all duration-200;
+  }
+
+  /* Button Variants */
+  .btn-corporate {
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200;
+    background: var(--gradient-primary);
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-corporate:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Status Indicators */
+  .status-pending {
+    @apply bg-warning/10 text-warning border-warning/20;
+  }
+
+  .status-approved {
+    @apply bg-success/10 text-success border-success/20;
+  }
+
+  .status-rejected {
+    @apply bg-destructive/10 text-destructive border-destructive/20;
+  }
+
+  /* Animation Classes */
+  .fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  .slide-up {
+    animation: slide-up 0.4s ease-out;
+  }
+
+  .scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
   }
 }
