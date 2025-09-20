@@ -14,6 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -35,9 +36,13 @@ const Login = () => {
           setError('Password must be at least 6 characters long.');
           return;
         }
+        if (!role) {
+          setError('Please select your role.');
+          return;
+        }
         // Simulate successful sign up
         setError('');
-        alert(`Account created for ${name}! Please sign in with your credentials.`);
+        alert(`Account created for ${name} as ${role}! Please sign in with your credentials.`);
         setIsSignUp(false);
         setName('');
         setConfirmPassword('');
@@ -64,6 +69,7 @@ const Login = () => {
     setPassword('');
     setConfirmPassword('');
     setName('');
+    setRole('');
   };
 
   const demoCredentials = [
@@ -120,6 +126,25 @@ const Login = () => {
                     placeholder="Enter your full name"
                     required
                   />
+                </div>
+              )}
+
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <select
+                    id="role"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    required
+                  >
+                    <option value="">Select your role</option>
+                    <option value="employee">Employee</option>
+                    <option value="manager">Manager</option>
+                    <option value="peer">Peer</option>
+                    <option value="hr">HR Admin</option>
+                  </select>
                 </div>
               )}
 
