@@ -35,6 +35,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState<'progress' | 'collaboration'>('progress');
   const itemsPerPage = 10;
 
   // Dummy data
@@ -290,14 +291,36 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Employee Progress Table */}
-        <Card className="lg:col-span-2 card-elevated">
-          <CardHeader>
-            <CardTitle>Employee Progress</CardTitle>
-            <CardDescription>Track individual JD collection status</CardDescription>
-          </CardHeader>
-          <CardContent>
+      {/* Main Content with Toggle */}
+      <Card className="card-elevated">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Employee Management</CardTitle>
+              <CardDescription>Monitor progress and collaboration activity</CardDescription>
+            </div>
+            <div className="flex bg-muted rounded-lg p-1">
+              <Button
+                variant={activeTab === 'progress' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveTab('progress')}
+                className="text-sm"
+              >
+                Employee Progress
+              </Button>
+              <Button
+                variant={activeTab === 'collaboration' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveTab('collaboration')}
+                className="text-sm"
+              >
+                Collaboration Activity
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {activeTab === 'progress' ? (
             <div className="space-y-4">
               {/* Data Table */}
               <div className="rounded-md border">
@@ -421,49 +444,42 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Collaboration Heatmap */}
-        <Card className="card-elevated">
-          <CardHeader>
-            <CardTitle>Collaboration Activity</CardTitle>
-            <CardDescription>Cross-department mentions & collaborations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {collaborationData.map((dept) => (
-                <div key={dept.department} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{dept.department}</span>
-                    <div className="flex gap-2 text-xs">
-                      <span className="flex items-center gap-1">
-                        <MessageCircle className="w-3 h-3" />
-                        {dept.mentions}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <UserCheck className="w-3 h-3" />
-                        {dept.collaborations}
-                      </span>
+          ) : (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {collaborationData.map((dept) => (
+                  <div key={dept.department} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">{dept.department}</span>
+                      <div className="flex gap-2 text-xs">
+                        <span className="flex items-center gap-1">
+                          <MessageCircle className="w-3 h-3" />
+                          {dept.mentions}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <UserCheck className="w-3 h-3" />
+                          {dept.collaborations}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-primary/10 rounded p-3 text-center">
+                        <div className="text-lg font-medium text-primary">{dept.mentions}</div>
+                        <div className="text-xs text-muted-foreground">Mentions</div>
+                      </div>
+                      <div className="bg-accent/10 rounded p-3 text-center">
+                        <div className="text-lg font-medium text-accent">{dept.collaborations}</div>
+                        <div className="text-xs text-muted-foreground">Active</div>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-primary/10 rounded p-2 text-center">
-                      <div className="text-sm font-medium text-primary">{dept.mentions}</div>
-                      <div className="text-xs text-muted-foreground">Mentions</div>
-                    </div>
-                    <div className="bg-accent/10 rounded p-2 text-center">
-                      <div className="text-sm font-medium text-accent">{dept.collaborations}</div>
-                      <div className="text-xs text-muted-foreground">Active</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
