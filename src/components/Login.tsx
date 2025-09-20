@@ -9,8 +9,11 @@ import { Building2, Lock, Mail, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Login = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -22,17 +25,45 @@ const Login = () => {
     setError('');
 
     try {
-      const success = login(email, password);
-      if (success) {
-        navigate('/dashboard');
+      if (isSignUp) {
+        // Sign up logic
+        if (password !== confirmPassword) {
+          setError('Passwords do not match.');
+          return;
+        }
+        if (password.length < 6) {
+          setError('Password must be at least 6 characters long.');
+          return;
+        }
+        // Simulate successful sign up
+        setError('');
+        alert(`Account created for ${name}! Please sign in with your credentials.`);
+        setIsSignUp(false);
+        setName('');
+        setConfirmPassword('');
       } else {
-        setError('Invalid credentials. Please check your email and password.');
+        // Sign in logic
+        const success = login(email, password);
+        if (success) {
+          navigate('/dashboard');
+        } else {
+          setError('Invalid credentials. Please check your email and password.');
+        }
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+    setError('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setName('');
   };
 
   const demoCredentials = [
@@ -60,18 +91,38 @@ const Login = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">JD Collection Platform</h1>
-            <p className="text-muted-foreground">Sign in to your account</p>
+            <p className="text-muted-foreground">
+              {isSignUp ? 'Create your account' : 'Sign in to your account'}
+            </p>
           </div>
         </div>
 
-        {/* Login Form */}
+        {/* Login/Sign Up Form */}
         <Card className="card-elevated">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-xl">Welcome back</CardTitle>
-            <CardDescription>Enter your credentials to continue</CardDescription>
+            <CardTitle className="text-xl">
+              {isSignUp ? 'Create Account' : 'Welcome back'}
+            </CardTitle>
+            <CardDescription>
+              {isSignUp ? 'Fill in your details to get started' : 'Enter your credentials to continue'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email address</Label>
                 <div className="relative">
@@ -104,6 +155,24 @@ const Login = () => {
                 </div>
               </div>
 
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
               {error && (
                 <Alert variant="destructive">
                   <AlertTriangle className="h-4 w-4" />
@@ -112,31 +181,46 @@ const Login = () => {
               )}
 
               <Button type="submit" className="w-full btn-corporate" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? (isSignUp ? 'Creating Account...' : 'Signing in...') : (isSignUp ? 'Create Account' : 'Sign In')}
               </Button>
             </form>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={toggleMode}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                {isSignUp 
+                  ? 'Already have an account? Sign in' 
+                  : "Don't have an account? Sign up"
+                }
+              </button>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Demo Credentials */}
-        <Card className="border-dashed">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Demo Credentials</CardTitle>
-            <CardDescription>Click any credential to auto-fill the form</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {demoCredentials.map((cred, index) => (
-              <button
-                key={index}
-                onClick={() => fillCredentials(cred.email, cred.password)}
-                className="w-full p-3 text-left border rounded-lg hover:bg-muted/50 transition-colors text-sm"
-              >
-                <div className="font-medium text-foreground">{cred.role}</div>
-                <div className="text-muted-foreground">{cred.email}</div>
-              </button>
-            ))}
-          </CardContent>
-        </Card>
+        {/* Demo Credentials - Only show for Sign In */}
+        {!isSignUp && (
+          <Card className="border-dashed">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Demo Credentials</CardTitle>
+              <CardDescription>Click any credential to auto-fill the form</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {demoCredentials.map((cred, index) => (
+                <button
+                  key={index}
+                  onClick={() => fillCredentials(cred.email, cred.password)}
+                  className="w-full p-3 text-left border rounded-lg hover:bg-muted/50 transition-colors text-sm"
+                >
+                  <div className="font-medium text-foreground">{cred.role}</div>
+                  <div className="text-muted-foreground">{cred.email}</div>
+                </button>
+              ))}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
