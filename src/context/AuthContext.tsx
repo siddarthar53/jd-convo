@@ -1,14 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'hr' | 'employee';
+export type UserRole = 'employee' | 'manager' | 'peer' | 'hr' | 'admin';
 
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
-  reportsTo?: string; // User ID of manager
-  subordinates?: string[]; // Array of user IDs who report to this user
 }
 
 interface AuthContextType {
@@ -24,42 +22,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const DEMO_CREDENTIALS = {
   'hr@demo.com': {
     password: 'Hr@123',
-    user: { 
-      id: '1', 
-      email: 'hr@demo.com', 
-      name: 'Sarah Johnson', 
-      role: 'hr' as UserRole 
-    }
+    user: { id: '1', email: 'hr@demo.com', name: 'Sarah Johnson', role: 'hr' as UserRole }
   },
   'manager@demo.com': {
     password: 'Mgr@123',
-    user: { 
-      id: '2', 
-      email: 'manager@demo.com', 
-      name: 'Michael Chen', 
-      role: 'employee' as UserRole,
-      subordinates: ['3', '4', '5'] as string[]
-    }
+    user: { id: '2', email: 'manager@demo.com', name: 'Michael Chen', role: 'manager' as UserRole }
   },
   'employee@demo.com': {
     password: 'Emp@123',
-    user: { 
-      id: '3', 
-      email: 'employee@demo.com', 
-      name: 'Alex Rivera', 
-      role: 'employee' as UserRole,
-      reportsTo: '2'
-    }
+    user: { id: '3', email: 'employee@demo.com', name: 'Alex Rivera', role: 'employee' as UserRole }
   },
   'peer@demo.com': {
     password: 'Peer@123',
-    user: { 
-      id: '4', 
-      email: 'peer@demo.com', 
-      name: 'Jamie Wilson', 
-      role: 'employee' as UserRole,
-      reportsTo: '2'
-    }
+    user: { id: '4', email: 'peer@demo.com', name: 'Jamie Wilson', role: 'peer' as UserRole }
   },
 } as const;
 
