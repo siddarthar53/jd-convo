@@ -109,7 +109,7 @@ const ApprovalDashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">
-          {user?.role === 'manager' ? 'Manager' : 'Peer'} Approval Dashboard
+          Peer Approval Dashboard
         </h1>
         <p className="text-muted-foreground">
           Review and respond to mentions in job descriptions

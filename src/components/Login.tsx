@@ -74,9 +74,9 @@ const Login = () => {
 
   const demoCredentials = [
     { role: 'HR Admin', email: 'hr@demo.com', password: 'Hr@123' },
-    { role: 'Manager', email: 'manager@demo.com', password: 'Mgr@123' },
+    { role: 'Manager (Employee with subordinates)', email: 'manager@demo.com', password: 'Mgr@123' },
     { role: 'Employee', email: 'employee@demo.com', password: 'Emp@123' },
-    { role: 'Peer', email: 'peer@demo.com', password: 'Peer@123' },
+    { role: 'Peer Employee', email: 'peer@demo.com', password: 'Peer@123' },
   ];
 
   const fillCredentials = (email: string, password: string) => {
@@ -141,8 +141,6 @@ const Login = () => {
                   >
                     <option value="">Select your role</option>
                     <option value="employee">Employee</option>
-                    <option value="manager">Manager</option>
-                    <option value="peer">Peer</option>
                     <option value="hr">HR Admin</option>
                   </select>
                 </div>

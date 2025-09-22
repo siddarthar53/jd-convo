@@ -21,25 +21,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   if (!user) return <>{children}</>;
 
   const getRoleIcon = () => {
-    switch (user.role) {
-      case 'employee': return <MessageCircle className="w-5 h-5" />;
-      case 'manager':
-      case 'peer': return <CheckSquare className="w-5 h-5" />;
-      case 'hr':
-      case 'admin': return <BarChart3 className="w-5 h-5" />;
-      default: return <User className="w-5 h-5" />;
-    }
+    if (user?.role === 'hr') return <BarChart3 className="w-5 h-5" />;
+    if (user?.role === 'employee' && user?.subordinates?.length) return <CheckSquare className="w-5 h-5" />; // Manager
+    return <MessageCircle className="w-5 h-5" />; // Regular employee
   };
 
   const getRoleColor = () => {
-    switch (user.role) {
-      case 'employee': return 'text-primary';
-      case 'manager':
-      case 'peer': return 'text-accent';
-      case 'hr':
-      case 'admin': return 'text-warning';
-      default: return 'text-muted-foreground';
-    }
+    if (user?.role === 'hr') return 'text-warning';
+    if (user?.role === 'employee' && user?.subordinates?.length) return 'text-accent'; // Manager
+    return 'text-primary'; // Regular employee
+  };
+
+  const getRoleDisplayName = () => {
+    if (user?.role === 'hr') return 'HR Admin';
+    if (user?.role === 'employee' && user?.subordinates?.length) return 'Manager';
+    return 'Employee';
   };
 
   return (
@@ -64,7 +60,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
                 <div className="text-sm">
                   <p className="font-medium">{user.name}</p>
-                  <p className="text-muted-foreground capitalize">{user.role}</p>
+                  <p className="text-muted-foreground">{getRoleDisplayName()}</p>
                 </div>
               </div>
             </Card>
